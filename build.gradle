@@ -1,0 +1,60 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+repositories {
+    maven {
+        url 'http://maven.corp.flurry.com/artifactory/libs-release'
+    }
+    mavenLocal()
+    maven {
+        url 'http://maven.corp.flurry.com/artifactory/libs-snapshot-local'
+    }
+}
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+archivesBaseName = 'com.flurry.zkSchemaRegistry'
+version = '1.1'
+
+dependencies {
+    compile(group: 'org.apache.commons', name: 'commons-io', version: '1.3.2')
+    compile(group: 'commons-lang', name: 'commons-lang', version: '2.6')
+    compile(group: 'commons-logging', name: 'commons-logging', version: '1.1.1')
+    compile(group: 'commons-configuration', name: 'commons-configuration', version: '1.6', transitive: false)
+    compile(group: 'org.apache.zookeeper', name: 'zookeeper', version: '3.4.5')
+    compile(group: 'com.google.guava', name: 'guava', version: '14.0.1')
+    compile(group: 'com.netflix.curator', name: 'curator-framework', version: '1.3.3')
+    compile(group: 'com.netflix.curator', name: 'curator-recipes', version: '1.3.3')
+
+    testCompile(group: 'com.netflix.curator', name: 'curator-test', version: '1.3.3')
+    testCompile(group: 'org.mockito', name: 'mockito-all', version: '1.9.5')
+    testCompile(group: 'junit', name: 'junit', version: '4.11')
+}
+
+task "create-dirs" << {
+    sourceSets*.java.srcDirs*.each { it.mkdirs() }
+    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+}
+
+
+jar {
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+     manifest {
+        attributes(
+            "Implementation-Title": "ZkSchemaRegistry",
+            "Implementation-Version": version,
+            "Implementation-Vendor-Id": "com.flurry",
+            "Implementation-Vendor": "The orange fist at flurry"
+            )
+    }
+}
+
+task sourcesJar(type: Jar, dependsOn: jar) {
+    classifier 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
