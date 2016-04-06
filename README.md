@@ -3,7 +3,7 @@ zkSchemaRegistry
 
 A zookeeper registry which allows applications to keep track of which schemas other applications are running.
 
-This is very helpful if you want to namespace memcached with a schema such that you can avoid memcached poisoning.  The basic overview is that when an application starts up it creates a cache of all other schemas for all applications running.  When all other currently running applicaitons are notified that an application with a new schema is about to start, then then only you can start.  
+This is very helpful if you want to namespace memcached [https://github.com/vallancelee/hibernate-memcached] with a schema such that you can avoid memcached poisoning.  The basic overview is that when an application starts up it creates a cache of all other schemas for all applications running.  When all other currently running applicaitons are notified that an application with a new schema is about to start, then then only you can start.  
 
 Basic API
 
